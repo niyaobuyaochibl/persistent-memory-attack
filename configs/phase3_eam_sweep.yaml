@@ -1,0 +1,26 @@
+base_config: phase3_drift_smoke.yaml
+output_root: results/phase3_eam_sweep
+seeds:
+- 42
+feedback_models:
+- deterministic
+drift_modes:
+- stable
+- abrupt
+overrides:
+  n_users: 8
+  policies:
+  - no_memory
+  - raw_no_early_write
+  - eam
+parameter_grid:
+  eam_base_strength:
+  - 0.5
+  - 1.0
+  - 1.5
+  eam_positive_strength:
+  - 0.75
+  - 1.25
+  eam_decay:
+  - 0.6
+  - 0.75

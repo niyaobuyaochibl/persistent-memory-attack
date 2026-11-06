@@ -1,0 +1,60 @@
+data_root: ../niche_user_study/data
+backend: openai
+trace_prompts: false
+user_chunk: 50
+min_history: 30
+rounds: 8
+intervention_rounds: 2
+candidate_size: 12
+recommendation_size: 3
+utility_target_quantile: 0.55
+head_quantile: 0.8
+tail_quantile: 0.2
+balanced_low: 0.4
+balanced_high: 0.6
+feedback_model: deterministic
+click_threshold: 0.5
+position_penalty: 0.015
+semantic_clusters: 16
+drift_mode: stable
+attack_mode: true
+recency_window: 3
+attack_target_relevance: 0.6
+attack_cluster_size: 80
+attack_slate: 12
+attack_pool_target: 3
+history_limit: 8
+max_new_tokens: 128
+eam_decay: 0.8
+eam_propensity_floor: 0.2
+eam_reference_propensity: 0.5
+ersm_top_genres: 6
+ersm_commit_threshold: 2
+conditions:
+- head
+- tail
+dataset: ml-1m
+movies_path: data/raw/ml-1m/movies.dat
+served_model_name: qwen/qwen3.8-27b
+openai_base_url: https://openrouter.ai/api/v1
+openai_api_key_env: OPENROUTER_API_KEY
+openai_extra_body:
+  reasoning:
+    enabled: false
+  provider:
+    order:
+    - deepinfra
+    allow_fallbacks: false
+    quantizations:
+    - bf16
+openai_max_retries: 6
+io_workers: 32
+output_dir: results/revision/rev_qwen38_27b_main_ml1m_seed2027
+model_name: qwen/qwen3.8-27b
+seed: 2027
+n_users: 200
+memory_modes:
+- none
+- raw
+- ersm
+- ersm_invariant

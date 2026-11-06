@@ -1,0 +1,15 @@
+base_config: phase3_drift_smoke.yaml
+output_root: results/phase3_drift_validation
+seeds:
+- 123
+- 2026
+feedback_models:
+- deterministic
+- logistic
+- nonlinear
+drift_modes:
+- stable
+- gradual
+- abrupt
+overrides:
+  n_users: 20

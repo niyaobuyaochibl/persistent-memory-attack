@@ -1,0 +1,24 @@
+[project]
+name = "stickyrec"
+version = "0.1.0"
+description = "Counterfactual stress testing for memory-driven popularity lock-in"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "PyYAML>=6.0",
+]
+
+[tool.setuptools]
+packages = ["stickyrec"]
+
+
+[project.optional-dependencies]
+llm = [
+    "accelerate>=1.0.0",
+    "safetensors>=0.4.0",
+    "transformers>=4.51.0",
+]
+llm-awq = [
+    "gptqmodel>=7.1.0",
+]

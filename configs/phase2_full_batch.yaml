@@ -1,0 +1,14 @@
+base_config: phase2_smoke.yaml
+output_root: results/phase2_full_batch
+seeds:
+- 42
+- 123
+- 999
+feedback_models:
+- deterministic
+- logistic
+- nonlinear
+overrides:
+  n_users: 100
+  rounds: 10
+  candidate_size: 50

@@ -1,0 +1,36 @@
+data_root: ../niche_user_study/data
+dataset: ml-1m
+movies_path: data/raw/ml-1m/movies.dat
+output_dir: results/llm_qwen8_ersm_smoke
+model_name: Qwen/Qwen3-8B-AWQ
+seed: 42
+n_users: 1
+min_history: 30
+rounds: 4
+intervention_rounds: 1
+candidate_size: 12
+recommendation_size: 3
+utility_target_quantile: 0.55
+head_quantile: 0.8
+tail_quantile: 0.2
+balanced_low: 0.4
+balanced_high: 0.6
+feedback_model: deterministic
+click_threshold: 0.54
+position_penalty: 0.015
+semantic_clusters: 16
+drift_mode: stable
+history_limit: 8
+max_new_tokens: 128
+eam_decay: 0.8
+eam_propensity_floor: 0.2
+eam_reference_propensity: 0.5
+ersm_top_genres: 6
+memory_modes:
+- none
+- raw
+- ersm
+- ersm_no_residual
+conditions:
+- head
+- tail
