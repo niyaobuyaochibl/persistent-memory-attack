@@ -165,8 +165,9 @@ def table_hosted(df: pd.DataFrame) -> str:
     lines = [
         r"\begin{table}[t]",
         r"\caption{Hosted agent models (200 users per dataset; 3 seeds for the OpenRouter"
-        r" models at temperature 0, 1 seed for GPT-6-Luna at default sampling; reasoning"
-        r" disabled). Columns as in Table~\ref{tab:main}; $^\dagger$: 95\% CI excludes zero.}",
+        r" models at temperature 0, 1 seed for the two GPT models at default sampling;"
+        r" reasoning disabled except for GPT-6.1-Sol, which uses effort \texttt{low})."
+        r" Columns as in Table~\ref{tab:main}; $^\dagger$: 95\% CI excludes zero.}",
         r"\label{tab:hosted}",
         r"\small",
         r"\begin{tabular}{lrrrrrr}",
