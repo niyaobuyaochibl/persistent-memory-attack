@@ -1,0 +1,149 @@
+% Figure 1: the early-exposure attack, the lock-in it leaves in memory, and ERSM.
+% Same fonts as acmart; printed at \linewidth (5.48 in), so sizes are printed sizes.
+% Build: pdflatex fig0_framework.tex
+\documentclass[tikz,border=1pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage[tt=false, type1=true]{libertine}
+\usepackage[libertine]{newtxmath}
+\usepackage{fontawesome5}
+\usetikzlibrary{arrows.meta,calc,positioning}
+
+\definecolor{tgt}{HTML}{C0392B}
+\definecolor{org}{HTML}{8FA9C4}
+\definecolor{ersm}{HTML}{2F7D4F}
+\definecolor{ink}{HTML}{3C4043}
+\definecolor{mute}{HTML}{9AA0A6}
+\definecolor{bgA}{HTML}{FCEFED}
+\definecolor{bgB}{HTML}{F4F4F2}
+\definecolor{bgC}{HTML}{EBF5EF}
+\definecolor{hdB}{HTML}{5F6368}
+
+\tikzset{
+  flow/.style={-{Stealth[length=4pt,width=3.6pt]}, line width=0.8pt, draw=ink},
+  tile/.style={rounded corners=0.8pt, minimum size=0.25cm, inner sep=0pt},
+  lab/.style={font=\sffamily\scriptsize, text=ink, inner sep=1pt},
+  note/.style={font=\sffamily\scriptsize, text=hdB, inner sep=1pt},
+  take/.style={font=\sffamily\scriptsize\itshape, text=ink, align=center,
+               text width=4.0cm, inner sep=0pt},
+  icon/.style={font=\large, text=ink, inner sep=1pt},
+  side/.style={lab, rotate=90, anchor=south},
+}
+
+\newcommand{\PW}{4.4}
+\newcommand{\PH}{6.0}
+
+% \tiles{x}{y}{step}{colours}: a row of item tiles starting at (x, y)
+\newcommand{\tiles}[4]{%
+  \foreach \c [count=\i from 0] in {#4}
+    \node[tile, fill=\c] at ($(#1,#2)+(\i*#3,0)$) {};}
+
+% \panel{bg}{header colour}{number}{header}
+\newcommand{\panel}[4]{%
+  \fill[#1, rounded corners=5pt] (0,0) rectangle (\PW,\PH);
+  \node[fill=#2, text=white, rounded corners=5.5pt, font=\sffamily\bfseries\scriptsize,
+        inner xsep=5pt, inner ysep=2.4pt] at (\PW/2,\PH-0.32)
+    {\tikz[baseline=(n.base)]\node[circle, fill=white, text=#2, inner sep=0.7pt,
+       minimum size=8pt, font=\sffamily\bfseries\tiny] (n) {#3};\enspace #4};}
+
+% \skeleton{slate colours}{loop colour}: agent, slate, user, memory card and arrows
+\newcommand{\skeleton}[2]{%
+  \node[icon] (agent) at (0.6,4.55) {\faRobot};
+  \node[lab, below=0pt of agent] (agentlab) {agent $\pi$};
+  \node[draw=mute!70, fill=white, rounded corners=2pt, minimum width=1.86cm,
+        minimum height=0.44cm] (slate) at (2.2,4.55) {};
+  \tiles{1.56}{4.55}{0.32}{#1}
+  \node[lab, below=0pt of slate] {slate $S_t$};
+  \node[icon] (user) at (3.25,3.3) {\faUser};
+  \node[draw=mute!70, fill=white, rounded corners=3pt, minimum width=3.9cm,
+        minimum height=1.2cm, anchor=south west] (mem) at (0.25,0.95) {};
+  \node[lab, anchor=north west, font=\sffamily\bfseries\scriptsize] at (0.33,2.1)
+    {\faDatabase\ memory $M_t$};
+  \draw[flow, draw=#2] (agent.east) -- (slate.west);
+  \draw[flow, draw=#2] (slate.east) -| (user.north);
+  \draw[flow, draw=#2] (user.south) -- (user.south |- mem.north);
+  \draw[flow, draw=#2] (agentlab.south |- mem.north) -- (agentlab.south);}
+
+\begin{document}
+\begin{tikzpicture}[x=1cm, y=1cm]
+
+% ---------------------------------------------------------------- groups
+\foreach \x/\w/\t in {0/9.15/without defense (raw memory), 9.5/4.4/with ERSM} {
+  \draw[mute, line width=0.5pt] (\x+0.15,\PH+0.22) -- (\x+\w-0.15,\PH+0.22);
+  \node[fill=white, font=\sffamily\scriptsize\bfseries, text=hdB, inner xsep=4pt]
+    at (\x+\w/2,\PH+0.22) {\t};
+}
+
+% ---------------------------------------------------------------- (1) attack
+\begin{scope}
+  \panel{bgA}{tgt}{1}{Attack: rounds $1,\dots,k$}
+  \skeleton{tgt,tgt,tgt,tgt,org}{ink}
+  \node[icon, text=tgt] (adv) at (3.9,5.2) {\faUserSecret};
+  \draw[flow, draw=tgt] (adv.west) to[out=180, in=60] (2.95,4.8);
+  \node[lab, text=tgt, anchor=north] at (2.2,5.43) {fills the slate with $G$};
+  \node[lab, anchor=west] at (3.3,3.95) {shown};
+  \node[lab, anchor=west] at (3.55,3.3) {click};
+  \node[lab, anchor=west] at (3.3,2.45) {write $\phi$};
+  \node[side] at (0.5,3.15) {read};
+  \node[lab, align=center] at (2.0,3.2)
+    {clicks $\propto$ exposure\\[-1pt]$\times$ preference};
+  \node[note, anchor=north east] at (4.08,2.1) {log $\cdot$ facts $\cdot$ mem0};
+  \tiles{0.5}{1.38}{0.31}{org,org,org,org,tgt,tgt,tgt,tgt}
+  \node[take] at (\PW/2,0.48)
+    {Clicks on promoted items are stored\\as if they were preferences.};
+\end{scope}
+
+\node[text=mute, font=\small] at (\PW+0.175,3.2) {\faChevronRight};
+
+% ---------------------------------------------------------------- (2) lock-in
+\begin{scope}[xshift=4.75cm]
+  \panel{bgB}{hdB}{2}{Lock-in: rounds $t>k$}
+  \skeleton{tgt,tgt,org,tgt,tgt}{tgt}
+  \node[icon, text=mute] (adv) at (3.9,5.2) {\faUserSecret};
+  \draw[hdB, line width=0.9pt] ($(adv.south west)+(0.04,0.04)$) -- ($(adv.north east)-(0.04,0.04)$);
+  \node[lab, text=hdB, anchor=north] at (2.2,5.43) {attacker has stopped};
+  \node[side, text=tgt] at (0.5,3.15) {read};
+  \node[lab, text=tgt, anchor=west] at (3.3,2.45) {write $\phi$};
+  \node[text=tgt, font=\Large] at (2.0,3.4) {\faSync*};
+  \node[lab, text=tgt] at (2.0,2.82) {self-reinforcing};
+  \tiles{0.5}{1.38}{0.31}{org,tgt,org,tgt,tgt,tgt,tgt,tgt,tgt,tgt,tgt}
+  \node[take] at (\PW/2,0.48)
+    {Memory keeps steering the agent\\towards $G$ after the attack ends.};
+\end{scope}
+
+\node[text=hdB, font=\sffamily\scriptsize\bfseries] at (2*\PW+0.35+0.175,3.2) {vs.};
+
+% ---------------------------------------------------------------- (3) ERSM
+\begin{scope}[xshift=9.5cm]
+  \panel{bgC}{ersm}{3}{Same attack, ERSM (ours)}
+  \skeleton{tgt,tgt,tgt,tgt,org}{ersm}
+  \node[icon, text=tgt] (adv) at (3.9,5.2) {\faUserSecret};
+  \draw[flow, draw=tgt] (adv.west) to[out=180, in=60] (2.95,4.8);
+  \node[lab, text=tgt, anchor=north] at (2.2,5.43) {fills the slate with $G$};
+  \node[side, text=ersm] at (0.5,3.15) {read};
+  \node[lab, text=ersm, anchor=west, align=left] at (3.3,2.5)
+    {residual\\[-1pt]vs.\ slate};
+  \node[text=ersm, font=\Large] at (2.0,3.4) {\faShield*};
+  \node[lab, text=ersm, align=center] at (2.0,2.75)
+    {exposure removed,\\[-1pt]item IDs dropped};
+  \node[note, anchor=north east] at (4.08,2.1) {facts, mem0: gated};
+  % attribute profile: one scalar score per attribute, no item identities
+  \foreach \w/\y in {1.45/1.68, 1.0/1.49, 0.65/1.30}
+    \fill[org, rounded corners=0.6pt] (0.5,\y-0.06) rectangle ++(\w,0.12);
+  \fill[tgt, rounded corners=0.6pt] (0.5,1.11-0.06) rectangle ++(0.07,0.12);
+  \node[lab, text=tgt, anchor=west] at (0.6,1.11) {$G\approx 0$};
+  \node[note, anchor=west, align=left] at (2.3,1.35)
+    {attribute scores,\\[-1pt]no titles or\\[-1pt]item IDs};
+  \node[take] at (\PW/2,0.48)
+    {Promoted clicks add little evidence,\\so little tilt remains after round $k$.};
+\end{scope}
+
+% ---------------------------------------------------------------- legend
+\begin{scope}[yshift=-0.32cm]
+  \node[tile, fill=tgt] at (3.55,0) {};
+  \node[lab, anchor=west] at (3.7,0) {target family $G$ (promoted)};
+  \node[tile, fill=org] at (7.25,0) {};
+  \node[lab, anchor=west] at (7.4,0) {items matching the user's prior taste};
+\end{scope}
+
+\end{tikzpicture}
+\end{document}

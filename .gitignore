@@ -7,3 +7,6 @@ results/*
 figures/*.pdf
 figures/*.png
 figures/*.tex
+!figures/fig0_framework.tex
+figures/*.aux
+figures/*.log

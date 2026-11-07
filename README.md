@@ -19,7 +19,7 @@ mem0, and ERSM with its ablations), and the scripts that produce every table.
 | `configs/` | the exact configs behind each experiment (`revision/`: main study, ablations, stress tests, mem0; `llama_v1/`, `qwen14b_v1/`: other open-weight agents; `kuairec/`; `api/`: OpenRouter models; `plan/`: GPT models) |
 | `data/splits/` | split corrections for MovieLens-1M (see below) |
 | `results/summary/` | aggregated results (lifts, bootstrap intervals, Holm-corrected tests) behind the paper's tables |
-| `figures/` | scripts that draw Figures 1–3 and the cross-model table from `results/summary/` |
+| `figures/` | sources for Figures 1–3 and the cross-model table, built from `results/summary/` |
 | `tests/` | unit tests |
 
 ## Setup
@@ -142,14 +142,14 @@ and the Holm-corrected p-value where applicable.
 
 ## Figures
 
-`figures/make_framework.py` draws the framework diagram (Figure 1);
+`figures/fig0_framework.tex` is the framework diagram (Figure 1, TikZ);
 `figures/make_results_figs.py` draws the cross-model lifts (Figure 2) and attacker
 strength (Figure 3) and writes the cross-model table (`tab_models.tex`) from the CSVs
 in `results/summary/`. Neither needs a GPU or the datasets.
 
 ```bash
 pip install -e '.[figures]'
-python figures/make_framework.py
+cd figures && pdflatex fig0_framework.tex && cd ..
 python figures/make_results_figs.py
 ```
 
