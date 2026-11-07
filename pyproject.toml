@@ -22,3 +22,6 @@ llm = [
 llm-awq = [
     "gptqmodel>=7.1.0",
 ]
+figures = [
+    "matplotlib>=3.7",
+]
